@@ -9,7 +9,8 @@ const { errors } = require('celebrate');
 const router = require('./routes/index');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const errorCatcher = require('./errors/errorCatcher');
-const { MONGO_DEFAULT_URL, limiter } = require('./constants/config');
+const { MONGO_DEFAULT_URL } = require('./constants/config');
+const { limiter } = require('./constants/rateLimit');
 
 const { PORT = 3000, NODE_ENV, MONGO_URL } = process.env;
 
