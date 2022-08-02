@@ -1,5 +1,5 @@
 const { celebrate, Joi } = require('celebrate');
-const linkRegExp = require('../constants/config');
+const { linkRegExp } = require('../constants/config');
 
 module.exports.loginValidation = celebrate({
   body: Joi.object().keys({
