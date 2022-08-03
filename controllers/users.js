@@ -5,7 +5,7 @@ const NotFoundError = require('../errors/NotFoundError');
 const BadRequestError = require('../errors/BadRequestError');
 const ConflictError = require('../errors/ConflictError');
 const AuthorizationError = require('../errors/AuthorizationError');
-const { SECRET_KEY } = require('../constants/config');
+const { SECRET_KEY, errorMessages, infoMessages } = require('../constants/config');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -14,7 +14,7 @@ module.exports.getInfoUser = (req, res, next) => {
 
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Запрашиваемый пользователь не найден');
+        throw new NotFoundError(errorMessages.userNotFoundError);
       } else {
         res.send({ email: user.email, name: user.name });
       }
@@ -32,16 +32,16 @@ module.exports.updateProfile = (req, res, next) => {
   )
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Запрашиваемый пользователь не найден');
+        throw new NotFoundError(errorMessages.userNotFoundError);
       } else {
         res.send(user);
       }
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequestError('Переданы некорректные данные при обновлении профиля.'));
+        next(new BadRequestError(errorMessages.dataError));
       } else if (err.code === 11000) {
-        next(new ConflictError('Указанный email уже зарегистрирован'));
+        next(new ConflictError(errorMessages.emailError));
       } else {
         next(err);
       }
@@ -58,9 +58,9 @@ module.exports.createUser = (req, res, next) => {
     }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequestError('Переданы некорректные данные при создании пользователя'));
+        next(new BadRequestError(errorMessages.dataError));
       } else if (err.code === 11000) {
-        next(new ConflictError('Указанный email уже зарегистрирован'));
+        next(new ConflictError(errorMessages.emailError));
       } else {
         next(err);
       }
@@ -73,7 +73,7 @@ module.exports.login = (req, res, next) => {
   User.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        throw new AuthorizationError('Неправильные почта или пароль');
+        throw new AuthorizationError(errorMessages.loginError);
       }
 
       return Promise.all([
@@ -83,7 +83,7 @@ module.exports.login = (req, res, next) => {
     })
     .then(([user, isPasswordTrue]) => {
       if (!isPasswordTrue) {
-        throw new AuthorizationError('Передан неверный email или пароль');
+        throw new AuthorizationError(errorMessages.loginError);
       }
       const token = jwt.sign(
         { _id: user._id },
@@ -103,5 +103,5 @@ module.exports.login = (req, res, next) => {
 };
 
 module.exports.logout = (req, res) => {
-  res.clearCookie('jwt').send({ message: 'Выход' });
+  res.clearCookie('jwt').send({ message: infoMessages.logoutMessage });
 };

@@ -1,5 +1,6 @@
 const { celebrate, Joi } = require('celebrate');
 const validator = require('validator');
+const { errorMessages } = require('../constants/config');
 
 module.exports.loginValidation = celebrate({
   body: Joi.object().keys({
@@ -34,19 +35,19 @@ module.exports.movieCreationValidation = celebrate({
       if (validator.isURL(value)) {
         return value;
       }
-      return helpers.message('Некорректный формат ссылки');
+      return helpers.message(errorMessages.urlError);
     }),
     trailerLink: Joi.string().required().custom((value, helpers) => {
       if (validator.isURL(value)) {
         return value;
       }
-      return helpers.message('Некорректный формат ссылки');
+      return helpers.message(errorMessages.urlError);
     }),
     thumbnail: Joi.string().required().custom((value, helpers) => {
       if (validator.isURL(value)) {
         return value;
       }
-      return helpers.message('Некорректный формат ссылки');
+      return helpers.message(errorMessages.urlError);
     }),
     movieId: Joi.number().required(),
     nameRU: Joi.string().required(),
