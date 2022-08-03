@@ -5,7 +5,7 @@ const NotFoundError = require('../errors/NotFoundError');
 const BadRequestError = require('../errors/BadRequestError');
 const ConflictError = require('../errors/ConflictError');
 const AuthorizationError = require('../errors/AuthorizationError');
-const SECRET_KEY = require('../constants/config');
+const { SECRET_KEY } = require('../constants/config');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 

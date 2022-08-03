@@ -1,5 +1,5 @@
 const { celebrate, Joi } = require('celebrate');
-const { linkRegExp } = require('../constants/config');
+const validator = require('validator');
 
 module.exports.loginValidation = celebrate({
   body: Joi.object().keys({
@@ -30,9 +30,24 @@ module.exports.movieCreationValidation = celebrate({
     duration: Joi.number().required(),
     year: Joi.string().required(),
     description: Joi.string().required(),
-    image: Joi.string().required().pattern(linkRegExp),
-    trailerLink: Joi.string().required().pattern(linkRegExp),
-    thumbnail: Joi.string().required().pattern(linkRegExp),
+    image: Joi.string().required().custom((value, helpers) => {
+      if (validator.isURL(value)) {
+        return value;
+      }
+      return helpers.message('Некорректный формат ссылки');
+    }),
+    trailerLink: Joi.string().required().custom((value, helpers) => {
+      if (validator.isURL(value)) {
+        return value;
+      }
+      return helpers.message('Некорректный формат ссылки');
+    }),
+    thumbnail: Joi.string().required().custom((value, helpers) => {
+      if (validator.isURL(value)) {
+        return value;
+      }
+      return helpers.message('Некорректный формат ссылки');
+    }),
     movieId: Joi.number().required(),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
