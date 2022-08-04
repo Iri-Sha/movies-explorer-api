@@ -10,6 +10,7 @@ const errorMessages = {
   dataError: 'Переданы некорректные данные',
   movieNotFoundError: 'Видео не найдено',
   movieDeleteError: 'Вы не можете удалить это видео',
+  serverError: 'На сервере произошла ошибка',
 };
 
 const infoMessages = {
