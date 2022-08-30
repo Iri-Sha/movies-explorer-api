@@ -16,7 +16,7 @@ module.exports.getInfoUser = (req, res, next) => {
       if (!user) {
         throw new NotFoundError(errorMessages.userNotFoundError);
       } else {
-        res.send({ email: user.email, name: user.name });
+        res.send(user);
       }
     })
     .catch((err) => next(err));
@@ -53,9 +53,7 @@ module.exports.createUser = (req, res, next) => {
 
   bcrypt.hash(password, 10)
     .then((hash) => User.create({ email, name, password: hash }))
-    .then(() => res.send({
-      data: { email, name },
-    }))
+    .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError(errorMessages.dataError));
